@@ -60,6 +60,26 @@ describe('Teste ABNT NBR 5891:1977', function(){
             assert.equal(vArredondado, "130.00");
             
         })
+
+        it("retorna 8.93 ao passar resultado de 8.925005", function(){
+            const abnt = new ABNT_5891_1977(2);
+            let vArredondado = abnt.arredonda(8.925005);
+            assert.equal(vArredondado, "8.93");
+        })
+
+        it("retorna 8.93 ao passar resultado de 8.925000005", function(){
+            const abnt = new ABNT_5891_1977(2);
+            let vArredondado = abnt.arredonda(8.925000005);
+            assert.equal(vArredondado, "8.93");
+        })
+
+        it("retorna 8.92 ao passar resultado de 8.925000000000001", function(){
+            const abnt = new ABNT_5891_1977(2);
+            let vArredondado = abnt.arredonda(8.925000000000001);
+            assert.equal(vArredondado, "8.92");
+        })
+
+        
     })    
     
     describe("testes com multiplicacoes", function(){
@@ -74,13 +94,15 @@ describe('Teste ABNT NBR 5891:1977', function(){
             let vArredondado = abnt.arredonda(85*0.105);
             assert.equal(vArredondado, "8.92");
         })
+
+        it("retorna 10.62 ao passar resultado de 85x0.125", function(){
+            const abnt = new ABNT_5891_1977(2);
+            let vArredondado = abnt.arredonda(85*0.125);
+            assert.equal(vArredondado, "10.62");
+        })
+
+      
     })
 
-    describe("utilização de dados arredondados", function(){
-        it("verifica so", function(){
-            const abnt = new ABNT_5891_1977(2);
-            let vArredondado = abnt.arredonda(85*0.105);
-            assert.equal(vArredondado, "8.92");
-        })
-    });
+  
 })

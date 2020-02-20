@@ -5,19 +5,89 @@ module.exports = class ABNT_5891_1977 {
     }
 
     arredonda(decimal){
-        const exp = Math.pow(10,(this.casasDecimais + 2));
-        
-        let numeroInteiro = parseInt(parseFloat(decimal.toFixed((this.casasDecimais+2))) * exp);
+        var strDecimal = decimal + "";
+        var arrDecimal = strDecimal.split('.');
+        var parteInteira = arrDecimal[0];
+        var parteDecimal = arrDecimal[1];
+        if(parteDecimal == undefined){
+            return parseInt(parteInteira).toFixed(this.casasDecimais);
+        }
 
-        let sobra = parseInt((numeroInteiro + "").substr(-2));
-        let  numero = parseInt((numeroInteiro + "").substr(0, ((numeroInteiro+"").length - 2) ));
-        //console.log("Numero ==> ", numero, (numeroInteiro+"").length, (numeroInteiro+"") );
+        var bugNovesRegex = new RegExp(/[9]{2,}/gm)
+
+        if(parteDecimal.length == 15){
+
+            var bugDoUmRegex = /[0]{2,}[1]{1}\z/gm;
+            if(bugNovesRegex.test(parteDecimal)){
+                parteDecimal = parteDecimal.replace(bugNovesRegex, "");
+                parteDecimal = (parseInt(parteDecimal) + 1) +"";
+            }
+            if(bugDoUmRegex.test(parteDecimal)){
+                parteDecimal = parteDecimal.replace(bugDoUmRegex, "");
+            }            
+        }
+
+        var diferenca = this.casasDecimais - (parteDecimal + "").length;
+        //console.log('diferenca', diferenca);
+        var sobe = false;
+        if(diferenca >= 0){
+            parteDecimal = parseInt(parteDecimal) * (Math.pow(10, diferenca));
+        } else {
+            //console.log("decimal1", parteDecimal);
+            var digitoDecisor = parseInt(parteDecimal.substr(this.casasDecimais,1));
+            var sobra = parseInt( parteDecimal.substr(this.casasDecimais + 1));
+            parteDecimal = parteDecimal.substr(0, this.casasDecimais);
+            //console.log("decimal1", parteDecimal, digitoDecisor);
+            if(digitoDecisor > 5){
+                
+                sobe = true;
+                //console.log("decimal1", parteDecimal);
+            } else if(digitoDecisor == 5){
+                
+                //console.log("decimal1", parteDecimal);
+                if(sobra > 0 || (parteDecimal % 2 != 0)){
+                    sobe=true
+                    //console.log("decimal1", parteDecimal);
+                }
+            }
+        }
+        var retorno = parseFloat(parteInteira + "." + parteDecimal);
+        if(sobe){
+            //console.log("sobe", parteInteira, parteDecimal, parseFloat(parteInteira + "." + parteDecimal), Math.pow(10, (-1) * this.casasDecimais));
+            retorno = retorno  + (Math.pow(10, (-1) * this.casasDecimais))
+        }
+
+        //console.log(retorno ,decimal, parteInteira, parteDecimal, this.casasDecimais);
+        return retorno;       
+
+    }
+
+    arredondaOld(decimal){
+        var auxPrecisao = 2;
+        var auxComparacao = 5 * Math.pow(10, auxPrecisao-1);
+        const exp = Math.pow(10,(this.casasDecimais + auxPrecisao));
+        
+        let numeroInteiro = parseInt((decimal.toFixed((this.casasDecimais+auxPrecisao))) * exp);
+
+        let sobra = parseInt((numeroInteiro + "").substr(-auxPrecisao));
+        let  numero = parseInt((numeroInteiro + "").substr(0, ((numeroInteiro+"").length - auxPrecisao) ));
+        
+        console.log("Numero ==> ", 
+                    numero, 
+                    (numeroInteiro+"").length, 
+                    (numeroInteiro+""),
+                    auxComparacao,
+                    sobra,
+                    decimal.toFixed((this.casasDecimais+auxPrecisao)),
+                    exp,
+                    (85*0.095),
+                    Math.imul(((85*0.095).toFixed(this.casasDecimais+auxPrecisao))), 1000000);
         if(this.ehPar(numero)){
-            if(sobra > 50){
+            if(sobra > auxComparacao){
                 numero++;
             }
         } else {
-            if(sobra >= 50){
+            if(sobra >= auxComparacao){
                 numero++;
             }
         }
