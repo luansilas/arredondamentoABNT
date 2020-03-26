@@ -9,6 +9,31 @@ module.exports = class ABNT_5891_1977 {
         var arrDecimal = strDecimal.split('.');
         var parteInteira = arrDecimal[0];
         var parteDecimal = arrDecimal[1];
+
+        var qtdZerosEsquerdaDecimal = 0;
+
+        if(parteDecimal){
+            for(let i=0; i< parteDecimal.length; i++){
+                let numero = parteDecimal.substr(i, 1);
+                if(parseInt(numero) == 0){
+                    qtdZerosEsquerdaDecimal ++;
+                    continue;
+                } 
+                break;
+                
+            }
+        }
+
+        // if(parteDecimal && this.casasDecimais == parteDecimal.length){
+        //     return strDecimal;
+        // }
+
+        // if(parteDecimal && this.casasDecimais > parteDecimal.length){
+        //     let dif = this.casasDecimais - parteDecimal.length;
+        //     parteDecimal = parteDecimal * Math.pow(10, dif);
+        //     return parteInteira + "." + parteDecimal;
+        // }
+
         if(parteDecimal == undefined){
             return parseInt(parteInteira).toFixed(this.casasDecimais);
         }
@@ -32,14 +57,19 @@ module.exports = class ABNT_5891_1977 {
         var sobe = false;
         if(diferenca >= 0){
             parteDecimal = parseInt(parteDecimal) * (Math.pow(10, diferenca));
+            
+            parteDecimal = parteDecimal + "";
+            for(let i=0; i<qtdZerosEsquerdaDecimal; i++){
+                parteDecimal = "0" + parteDecimal;
+            }
+
         } else {
-            //console.log("decimal1", parteDecimal);
+            
             var digitoDecisor = parseInt(parteDecimal.substr(this.casasDecimais,1));
             var sobra = parseInt( parteDecimal.substr(this.casasDecimais + 1));
             parteDecimal = parteDecimal.substr(0, this.casasDecimais);
             //console.log("decimal1", parteDecimal, digitoDecisor);
             if(digitoDecisor > 5){
-                
                 sobe = true;
                 //console.log("decimal1", parteDecimal);
             } else if(digitoDecisor == 5){
@@ -51,6 +81,8 @@ module.exports = class ABNT_5891_1977 {
                 }
             }
         }
+
+      
         var retorno = parseFloat(parteInteira + "." + parteDecimal);
         if(sobe){
             //console.log("sobe", parteInteira, parteDecimal, parseFloat(parteInteira + "." + parteDecimal), Math.pow(10, (-1) * this.casasDecimais));

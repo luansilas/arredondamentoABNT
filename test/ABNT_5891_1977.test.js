@@ -101,6 +101,30 @@ describe('Teste ABNT NBR 5891:1977', function(){
             assert.equal(vArredondado, "10.62");
         })
 
+        it("retorna 25.08 ao passar resultado de 12x2.09", function(){
+            const abnt = new ABNT_5891_1977(2);
+            let vArredondado = abnt.arredonda(12*2.09);
+            assert.equal(vArredondado, "25.08");
+        })
+
+        it("retorna 25.08 ao passar 25.083", function(){
+            const abnt = new ABNT_5891_1977(2);
+            let vArredondado = abnt.arredonda(25.083);
+            assert.equal(vArredondado, "25.08");
+        })
+
+        it("retorna 25.01 ao passar 25.008", function(){
+            const abnt = new ABNT_5891_1977(2);
+            let vArredondado = abnt.arredonda(25.008);
+            assert.equal(vArredondado, "25.01");
+        })
+
+        it("retorna 25.008 ao passar 25.008", function(){
+            const abnt = new ABNT_5891_1977(4);
+            let vArredondado = abnt.arredonda(25.008);
+            assert.equal(vArredondado, "25.0080");
+        })
+
       
     })
 
