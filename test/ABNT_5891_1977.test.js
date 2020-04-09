@@ -125,6 +125,12 @@ describe('Teste ABNT NBR 5891:1977', function(){
             assert.equal(vArredondado, "25.0080");
         })
 
+        it("retorna 28.80 ao passar 6*4,80", function(){
+            const abnt = new ABNT_5891_1977(2);
+            let vArredondado = abnt.arredonda(6*4.80);
+            assert.equal(vArredondado, "28.80");
+        })
+
       
     })
 

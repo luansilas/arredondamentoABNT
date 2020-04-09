@@ -13,6 +13,10 @@ module.exports = class ABNT_5891_1977 {
         var qtdZerosEsquerdaDecimal = 0;
 
         if(parteDecimal){
+            if(parteDecimal.length == 15){
+                return decimal.toFixed(this.casasDecimais);
+            }
+            
             for(let i=0; i< parteDecimal.length; i++){
                 let numero = parteDecimal.substr(i, 1);
                 if(parseInt(numero) == 0){
